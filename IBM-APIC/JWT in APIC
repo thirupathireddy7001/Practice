@@ -1,0 +1,7 @@
+Jwt link tutorial link==>https://www.ibm.com/docs/en/api-connect/software/10.0.x_cd?topic=tutorials-tutorial-generate-json-web-token-jwt
+
+var apim=require('apim');
+var token=apim.getvariable('generated.jwt');
+var jwt = token.replace(/^Bearer /, '');
+apim.setvariable('message.body', '{ "token" : "'+jwt+'"}');
+apim.output('application/json');

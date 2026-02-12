@@ -1,0 +1,20 @@
+var body=context.get('request.body');
+
+var response='';
+if(body){
+    var body1= JSON.parse(body);
+    var age=body1.age;
+    var email=body1.email;
+    var name=body1.name;
+   if(((name !=' ' && name.length>=3) && (age >=18)) && email.includes('@')){
+    console.log("given data  meet condition ");
+	response=JSON.stringify(body1);
+	context.set('message.body',response);
+	context.set('response','true');
+    }
+  else{
+    console.log("given data  not  meet condition ");
+	response="given data  not  meet condition"
+	//context.set('message.body',response);
+    }
+}

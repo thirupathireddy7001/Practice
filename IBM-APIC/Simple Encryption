@@ -1,0 +1,19 @@
+// apim.output('application/json'); // Set output MIME type (if needed)
+var crypto = require('crypto');
+// Define your symmetric key and IV (must be securely managed and stored, e.g., in an API Connect secret)
+var SymKey = Buffer.from('Q1F1WUN4SVZOeVRPdDQ4NzA4NFVQQk14aFMwWHhSRTQ=', 'base64'); // 32 bytes for A256GCM
+var iv1 = Buffer.from('dzZ0bXZLelVqNlJn', 'base64'); // 12 bytes for GCM
+
+// Create cipher instance using A256GCM algorithm
+var cipher = crypto.createCipheriv('A256GCM', SymKey, iv1);
+
+var pay_load = context.get('request.body'); // Data to encrypt
+var resp = JSON.stringify(pay_load);
+
+// Update cipher with data and finalize
+cipher.update(resp, 'utf8');
+var encipherData = cipher.final('base64');
+var Jdata = encipherData;
+
+// Write the encrypted payload to the API response
+session.output.write({"EncryptedPayload": Jdata});

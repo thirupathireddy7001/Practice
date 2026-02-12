@@ -1,0 +1,175 @@
+You need to create a storage solution for Azure for a planned mapped drive. What should you create?
+
+Blob Service
+
+✅ File Service
+
+Azure SQL DataLake
+
+Virtual Machine with Data Disk
+
+Azure China is...
+
+Operated by Microsoft
+
+Has feature parity with Azure Global
+
+✅ A separate instance accessible only from China
+
+What is a physical migration service to transfer large amounts of data quickly and reliably?
+
+✅ Azure Data Box
+
+Azure Databricks
+
+Azure File Sync
+
+Azure Migrate
+
+At which OSI layer does Azure ExpressRoute operate?
+
+✅ Layer 2
+
+Layer 3
+
+Layer 5
+
+Layer 7
+
+Your company plans to migrate to Azure. What should you create first?
+
+✅ A subscription
+
+A management group
+
+A virtual network
+
+A resource group
+
+You need to ensure VM1 cannot connect to other VMs. What should you do?
+
+✅ Deploy VM1 to a separate VNet
+
+Run a different OS
+
+Deploy to a separate resource group
+
+Assign two network interfaces
+
+You can assign an Azure Policy definition to a...
+
+Container App
+
+✅ Resource Group (RG)
+
+Resource Lock
+
+Security Group
+
+What provides a global view of Azure service status and outages?
+
+Application Insights
+
+Azure Advisor
+
+✅ Azure Service Health
+
+Microsoft Trust Center
+
+You have on-prem Windows Servers. What should you use to manage them via Azure Portal?
+
+Docker
+
+✅ Azure Arc
+
+AKS
+
+RBAC
+
+If Resource Group "RG1" has a delete lock, who can delete it?
+
+Only a Global Admin
+
+✅ The delete lock must be removed first
+
+An Azure Policy must be modified
+
+An Azure tag must be added
+
+You need to create an Azure VM running Android OS. What can you use?
+
+✅ PowerShell in Azure Cloud Shell
+
+✅ Bash in Azure Cloud Shell
+
+✅ Azure Portal
+
+You need notifications for Azure maintenance affecting your resources. What should you use?
+
+Azure Monitor
+
+✅ Azure Service Health
+
+Azure Advisor
+
+Microsoft Trust Center
+
+You need to restrict administrators to specific Azure regions. What should you use?
+
+Management Group
+
+Read-Only Lock
+
+✅ Azure Policy
+
+Reservation
+
+What provides a health overview of Azure services and regions?
+
+Azure Monitor
+
+Azure Resource Health
+
+✅ Azure Service Health
+
+Azure Status
+
+What provides access to unused Azure compute at deep discounts?
+
+Azure Container Instances
+
+Azure Reserved VM Instances
+
+✅ Azure Spot VM Instances
+
+Azure VM Scale Sets
+
+A Microsoft SQL Server database hosted in Azure with managed updates is an example of...
+
+DRaaS
+
+IaaS
+
+✅ PaaS
+
+SaaS
+
+What should an application use to interact with Azure and manage resources?
+
+APIs
+
+✅ Azure CLI
+
+✅ Azure Cloud Shell
+
+✅ ARM Templates
+
+What is an example of vertical scaling?
+
+Adding additional App Services
+
+✅ Adding CPU
+
+Adding more VMs
+
+Adding AVD session hosts

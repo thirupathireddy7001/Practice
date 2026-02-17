@@ -1,0 +1,5 @@
+API's Flow that worked 
+1.Proxy 
+2.Oath2(application code) ==> JWT token        ==> Invoke call
+3.Set Variable(Basic Auth)==>Operation Switch  ==> Invoke call
+4.Set variable(pub cert and Private key) ==>Operational switch ==>Encrypt ==>Decrypt ==>Invoke

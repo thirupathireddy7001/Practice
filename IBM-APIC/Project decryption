@@ -1,0 +1,85 @@
+Decryptionn
+
+var apim = require('apim');
+var crypto = require('crypto');
+var transform = require('transform');
+var hm = require('header-metadata');
+
+
+//YONO private key
+var yonoPrivateKey = context.get('sbiPrivateKey');
+//IIBPvtKey
+var senderPubCertificate = context.get('recipientCertificate');
+//IIBPubKey
+var APICToken = context.get('apicToken');
+//APICToken
+var APICChannel = context.get('apicChannel');
+//APICToken
+
+apim.readInputAsJSON(function (error, jsonData) {
+    if (error) {
+        var errorObj = {};
+        errorObj.errMsg = error;
+        errorObj.location = 'While reading input';
+        errorObj.status = '0';
+        //		errorObj.errResponse = jsonData;
+        context.message.body.write(errorObj);
+        apim.output('application/json');
+        return;
+    } else {
+        try {
+            console.error('****Capsec Updated Req ******');
+           
+            var encKey = jsonData.encrypted_key;
+            var xmlString = '<DataToDecrypt><Data>' + encKey + '</Data><Config><recipientKey>name:' + yonoPrivateKey + '</recipientKey><Algo>http://www.w3.org/2001/04/xmlenc#rsa-1_5</Algo></Config></DataToDecrypt>';
+            var options = {
+                'xmldom': XML.parse(xmlString),
+                'location': 'local:///decrypt_key.xslt'
+            };
+            transform.xslt(options, function (callXsltErr, xmlNodeList) {
+                if (callXsltErr) {
+                    context.message.body.write('{"errorMsg":"' + callXsltErr + '","errorType":"error while calling local:///decrypt_key.xslt","status":"0"}');
+                    apim.output('application/json');
+                } else {
+                    transform.xpath('/decryptedData/decryptedKey/text()', xmlNodeList, function (xpathErr, decrypted_key) {
+                        if (xpathErr) {
+                            context.message.body.write('{"errorMsg":"' + xpathErr + '","errorType":"error while decrypting symmetric key","status":"0"}');
+                            apim.output('application/json');
+                        } else {
+                            var ssKeyStr = new Buffer(decrypted_key.item(0).textContent, 'base64');
+                            
+                            var iv = new Buffer(jsonData.iv, 'base64');
+                            var decipher = crypto.createDecipheriv('aes256-cbc', ssKeyStr, iv);
+                            decipher.update(jsonData.ciphertext, 'base64');
+                            var response = decipher.final('utf8');
+                            context.set('requestId', jsonData.requestId);
+                            var opObj = {};
+                            opObj.requestId = jsonData.requestId;
+                            opObj.payload = JSON.parse(response);
+                            //							opObj.context.client.channel = "APIC";
+                            //							opObj.context.client.token = "6ebacc43d6de8e4c679c3822f07ffb63d0f20fc2db1e1e805774e418592d488eee2f85d1b64b2c26253e98a83d7d04f80c9b37fcf9e51eb92c32f945d8df11af";
+                            //						opObj.context.client.channel = APICChannel;
+                            //						opObj.context.client.token = APICToken;
+                             console.error(opObj);
+                            context.message.body.write(opObj);
+                            apim.output('application/json');
+                        }
+                    });
+                }
+            });
+        } catch (e) {
+            var errorObj = {};
+            errorObj.errMsg = e;
+            errorObj.location = 'Exception while decrypting request';
+            errorObj.status = '0';
+            errorObj.s = context.get('inRequest');
+            errorObj.errResponse = jsonData;
+            
+            hm.current.set('Authorization', 'Bearer ' + context.get('generated.jwt'));
+            context.message.body.write(errorObj);
+            
+            apim.output('application/json');
+            return;
+        }
+    }
+});

@@ -1,0 +1,127 @@
+encryption 
+var apim = require('apim');
+var crypto = require('crypto');
+var transform = require('transform');
+var hm = require('header-metadata');
+//Random 32 bit symmetric key
+var symmetricKey = crypto.randomBytes(32);
+var symmetricKeyStr = symmetricKey.toString('base64');
+
+var sbiPrivateKey = context.get('sbiPrivateKey');
+var senderPubCertificate = context.get('recipientCertificate');
+
+//Encrypting symmetric key using xslt(local:///encrypt_key.xslt)
+var xmlString = '<DataToEncrypt><Data>' + symmetricKeyStr + '</Data><Config><pubKey>name:' + senderPubCertificate + '</pubKey><Algo>http://www.w3.org/2001/04/xmlenc#rsa-1_5</Algo></Config></DataToEncrypt>';
+var options = {
+    'xmldom': XML.parse(xmlString),
+    'location': 'local:///encrypt_key.xslt'
+};
+
+
+transform.xslt(options, function (callXsltErr, xmlNodeList) {
+    if (callXsltErr) {
+        
+        var opStr = {
+            'status': '0',
+            'errorMsg': callXsltErr,
+            'location': 'while calling xslt for symmetricKey encryption'
+        };
+        
+        //setting response to response body
+        context.message.body.write(opStr);
+        
+        //setting response content type
+        apim.output('application/json');
+        return;    
+                   
+    } else {
+        //transforming xslt local:///encrypt_key.xslt for encrypting symmetric key
+        transform.xpath('/encryptedData/encryptedKey/text()', xmlNodeList, function (xpathErr, encrypted_key) {
+            if (xpathErr) {
+                
+                var opStr = {
+                    'status': '0',
+                    'errorMsg': xpathErr,
+                    'location': 'transforming xslt local:///encrypt_key.xslt for encrypting symmetric key'
+                };
+                
+                //setting response to response body
+                context.message.body.write(opStr);
+                
+                //setting response content type
+                apim.output('application/json');
+                return;
+            } else {
+                //reading input request payload
+                apim.readInputAsBuffer(function (readAsBufferError, jsonDataB) {
+                    if (readAsBufferError) {
+                        
+                        var opStr = {
+                            'status': '0',
+                            'errorMsg': readAsBufferError,
+                            'location': 'while reading input request'
+                        };
+                        
+                        
+                        //setting response to response body
+                        context.message.body.write(opStr);
+                        
+                        //setting response content type
+                        apim.output('application/json');
+                        return;    
+                    } else {
+                        try {
+                            
+                            //Encrypted symmetric key
+                            var encKeyStr = encrypted_key.item(0).textContent;
+                            
+                            
+                            //Creating cipher with aes256-cbc algorithm and providing key and IV
+                            var cipher = crypto.createCipheriv('aes256-cbc', symmetricKey);
+                            
+                            //Random 16byte initialization vector (IV)
+                            var iv = cipher.getIV();
+                            
+                            
+                            //Updating cipher with JSON data
+                            cipher.update(jsonDataB);
+                            
+                            //Encryting payload
+                            var encString = cipher.final('base64');
+                            
+                            
+                            //Creating response structure								
+                            var opStr = {
+                                'requestId': context.get('requestId'),
+                                'encrypted_key': encKeyStr,
+                                'ciphertext': encString,
+                                'iv': iv.toString('base64')
+                            };
+                            
+                            //setting response to response body
+                            context.message.body.write(opStr);
+                            
+                            //setting response content type
+                            apim.output('application/json');    
+                                                                
+                        } catch (e) {
+                            var opStr = {
+                                'status': '0',
+                                'errorMsg': e,
+                                'location': 'Catch exception'
+                            };
+                            
+                            
+                            //setting response to response body
+                            context.message.body.write(opStr);
+                            
+                            //setting response content type
+                            apim.output('application/json');
+                            return;
+                        }
+                    }
+                });
+            }
+        });
+    }
+});

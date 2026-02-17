@@ -1,0 +1,152 @@
+package Sample;
+
+import java.util.Scanner;
+
+public class BankExample {
+
+	double accountBal;
+	String accountNum="123456789";
+	String lasFourDigits=accountNum.substring(accountNum.length() -4);
+	String maskedAccNum="xxxxxxx"+lasFourDigits;
+	double amount;
+	Scanner sc = new Scanner(System.in);
+
+	
+
+	double updatedBal;
+	double withdrawBal;
+
+	public static void main(String[] args) {
+
+		BankExample s = new BankExample();
+		s.setBalance(10000," ", 5000);
+		s.serviceSelection();
+		s.redirection();
+
+	}
+
+	public void serviceSelection() {
+
+		System.out.println(
+				" Select which service you want among BalanceEnquiery press (B), Deposit press(D), Withdraw  press(W) ");
+		String name = sc.nextLine();
+		System.out.println("Hello, you have choosen  " + name + " sevice");
+
+		if (name.equalsIgnoreCase("BalanceEnquiery") || name.equalsIgnoreCase("B")) {
+			currentBalEnq();
+		} else if (name.equalsIgnoreCase("Deposit") || name.equalsIgnoreCase("D"))
+
+		{
+			deposit();
+
+		} else if (name.equalsIgnoreCase("Withdraw") || name.equalsIgnoreCase("W")) {
+			withDraw();
+		} else {
+			System.out.println("choose correct service  ");
+			// redirection();
+
+		}
+
+	}
+
+	public void redirection() {
+		System.out.println("do you want exit or continue ? for exit press 0 or to continue press 1 ");
+		int name = sc.nextInt();
+
+		if (name == 0) {
+			System.out.println("exiting from the services ");
+			System.exit(0);
+		} else if (name == 1) {
+			System.out.println(
+					"enter which service you want to continue among BalanceEnquiery(1), Deposit(2), Withdraw(3) ");
+			int value = sc.nextInt();
+
+			if (value == 1) {
+				currentBalEnq();
+				System.out.println("exiting from the services ");
+				System.exit(0);
+			} else if (value == 2)
+
+			{
+				deposit();
+				System.out.println("exiting from the services ");
+				System.exit(0);
+			} else if (value == 3) {
+				withDraw();
+				System.out.println("exiting from the services ");
+				System.exit(0);
+			} else {
+				System.out.println(" You have choosen Incorrect service  ");
+				serviceSelection();
+
+			}
+
+		} else {
+
+			System.out.println("invalid response");
+
+		}
+		// serviceSelection();
+
+	}
+
+	public void setBalance(double value, String value1, double value3) {
+		this.accountBal = value;
+		this.accountNum = value1;
+		this.amount = value3;
+
+	}
+
+	public void currentBalEnq() {
+		
+		/*System.out.println(" accountBal : "+accountBal);
+		System.out.println("  updatedBal: "+updatedBal);
+		System.out.println(" withdrawBal : "+withdrawBal);*/
+		
+		if (updatedBal == 0) {
+			System.out.println("your current balance is " + accountBal);
+		} else {
+			System.out.println("your current balance is ==>" + updatedBal);
+		}
+
+	}
+
+	public void withDraw() {
+		System.out.println("Enter amount to withdraw ");
+		double amount = sc.nextDouble();
+
+		if (accountBal >= amount) {
+			double tempBal = accountBal - amount;
+			System.out.println(
+					"you have withdrawn " + amount + " from " + maskedAccNum + " and your current bal is " + tempBal);
+			withdrawBal = tempBal;
+			accountBal = tempBal;
+
+		} else {
+			System.out.println(" Insufficient funds ");
+		}
+
+	}
+
+	public void deposit() {
+		try {
+			if(maskedAccNum == null || maskedAccNum!=null)
+			{
+			System.out.println("Enter amount to deposit ");
+			double amount = sc.nextDouble();
+
+			double temp = accountBal + amount;
+			updatedBal = temp;
+			accountBal = temp;
+			System.out.println(amount + " has been credited to your Account " + maskedAccNum
+					+ " and your current account balance is " + temp);
+			}
+
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+	}
+}

@@ -1,0 +1,120 @@
+package libraryManagement;
+
+import java.util.*;
+
+public class Book {
+	int bookId;
+	String title;
+	String author;
+	String availability;
+	ArrayList<String> books = new ArrayList<>();
+	Scanner sc = new Scanner(System.in);
+
+	public void bookOperation() {
+		System.out.println("choose operation related to Book Press 1 add Book, Prees 2 to find book in the Library ");
+		String input = sc.nextLine();
+		if (books.isEmpty()) {
+
+			if (input.equals("1")) {
+				addingBooks();
+				System.out.println(
+						"you want continue or Exit...Press 1 Continue or Press 0 to Exit from Library Operations");
+				String adOption = sc.nextLine();
+				if (adOption.equals("1")) {
+					bookOperation();
+				} else if (adOption.equals("0")) {
+					System.out.println("exiting from the services .....");
+					System.exit(0);
+				} else {
+					System.out.println("wrong selection ");
+				}
+			} else if (input.equals("2")) {
+				if (books.isEmpty()) {
+					System.out.println("Library is empty " + books);
+					System.out.println("Library is empty, In order AddBook press 1 , exit press 0");
+					String addoption = sc.nextLine();
+					switch (addoption) {
+					case "1":
+						addingBooks();
+						System.out.println("Library is empty, In order AddBook press 1 , exit press 0");
+						String addoption1 = sc.nextLine();
+						if (addoption1.equals("1")) {
+							bookOperation();
+						} else if (addoption1.equals("0")) {
+							System.out.println("exiting from the services .....");
+							System.exit(0);
+						} else {
+							System.out.println("wrong selection ");
+						}
+						
+						break;
+					case "0":
+						System.out.println("exiting from the services .....");
+						System.exit(0);
+
+						break;
+					default:
+						System.out.println("choose correct option ");
+						break;
+
+					}
+
+				} else {
+					findBook();
+				}
+			} else {
+				System.out.println("wrong option selection");
+			}
+
+		} else {
+			findBook();
+			System.out.println("you want continue or Exit...Press 1 Continue or Press 0 to Exit from Library Operations");
+			String adOption = sc.nextLine();
+			if (adOption.equals("1")) {
+				bookOperation();
+			} else if (adOption.equals("0")) {
+				System.out.println("exiting from the services .....");
+				System.exit(0);
+			} else {
+				System.out.println("wrong selection ");
+			}
+		}
+
+	}
+
+	public void addingBooks()
+
+	{
+		System.out.println("You Choosed AddBook Operation ...");
+		System.out.println("Enter either BookID or  Book Title or  Book Author to add into Library Management");
+		String bookDeatils = sc.nextLine();
+		books.add(bookDeatils);
+		System.out.println(bookDeatils + " has been added Library ");
+
+	}
+
+	public void findBook() {
+
+		System.out.println("You Choosed findBook Operation ...");
+		System.out.println("Enter either BookID or  Book Title or  Book Author to Find  into Library Management");
+		String findBookDetails = sc.nextLine();
+		if (books.contains(findBookDetails)) {
+			System.out.println(findBookDetails + " found in Library...");
+		} else {
+			System.out.println(findBookDetails + " Not found in Library...");
+		}
+
+	}
+	
+	public void displayAllBooks()
+	{
+		if (books.isEmpty())
+		{
+			System.out.println("Library is empty " + books);
+		}
+		else
+		{
+			System.out.println("All books in Library were "+books);
+		}
+	}
+}

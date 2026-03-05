@@ -214,3 +214,55 @@ RESULT==>
 <average>2</average>
 </summary>
 ========================================================================================
+Q: Need BMW as OUTPUT
+
+<cars>   
+<car>volvo</car>
+<car>bmw</car>
+<car>benz</car>
+</cars>
+-----------------------------------------------------------
+Solutions:
+
+1.<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<xsl:value-of  select="/cars/car[2]"/>
+</xsl:template>
+</xsl:stylesheet>
+
+2.
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<xsl:value-of  select="/cars/car[text()='bmw']"/>
+</xsl:template>
+</xsl:stylesheet
+
+3.
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<xsl:value-of  select="/cars/car[.='bmw']"/>
+</xsl:template>
+</xsl:stylesheet
+
+4.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<xsl:for-each select ="/cars/car">
+<xsl:if test=".='bmw'">
+<xsl:value-of  select="/cars/car[.='bmw']"/>
+</xsl:if>
+</xsl:for-each>
+</xsl:template>
+</xsl:stylesheet>
+
+
+-------------------------------------------------------------
